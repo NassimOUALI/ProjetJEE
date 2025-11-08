@@ -1,6 +1,6 @@
 <footer class="mt-5 py-4 bg-light border-top">
     <div class="container text-center footer-muted small">
-        © <script>document.write(new Date().getFullYear())</script> StudySync · Crafted for collaborative learning
+        © 2025 StudySync · designed and created by Taki and Nimo
     </div>
 </footer>
 
