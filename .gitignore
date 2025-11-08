@@ -1,0 +1,7 @@
+/target/
+/.idea/
+/.smarttomcat/
+/.DS_Store
+*.log
+
+

@@ -1,0 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="csrfToken" value='<%= com.studysync.util.CSRFTokenManager.generateToken((javax.servlet.http.HttpServletRequest) pageContext.getRequest()) %>' />
+<input type="hidden" name="csrfToken" value="${csrfToken}" />
+

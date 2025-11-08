@@ -1,0 +1,102 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<c:if test="${totalPages > 1}">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mt-4">
+            
+            <!-- Determine base URL (no query string) -->
+            <c:set var="contextPath" value="${pageContext.request.contextPath}" />
+            <c:set var="queryString" value="${pageContext.request.queryString}" />
+            
+            <!-- Default page parameter name to 'page' if not specified -->
+            <c:if test="${empty pageParamName}">
+                <c:set var="pageParamName" value="page" />
+            </c:if>
+
+            <c:choose>
+                <c:when test="${not empty paginationBaseUrl}">
+                    <c:set var="baseUrl" value="${fn:substringBefore(paginationBaseUrl, '?')}" />
+                    <c:if test="${empty baseUrl}">
+                        <c:set var="baseUrl" value="${paginationBaseUrl}" />
+                    </c:if>
+                </c:when>
+                <c:otherwise>
+                    <c:set var="servletPath" value="${pageContext.request.servletPath}" />
+                    <c:set var="pathInfo" value="${pageContext.request.pathInfo}" />
+                    <c:choose>
+                        <c:when test="${not empty pathInfo}">
+                            <c:set var="baseUrl" value="${contextPath}${servletPath}${pathInfo}" />
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="baseUrl" value="${contextPath}${servletPath}" />
+                        </c:otherwise>
+                    </c:choose>
+                </c:otherwise>
+            </c:choose>
+
+            <!-- PREVIOUS BUTTON -->
+            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                <c:url var="prevUrl" value="${baseUrl}">
+                    <!-- Preserve non-page params -->
+                    <c:forEach var="param" items="${pageContext.request.parameterMap}">
+                        <c:if test="${param.key ne pageParamName}">
+                            <c:param name="${param.key}" value="${param.value[0]}" />
+                        </c:if>
+                    </c:forEach>
+                    <c:param name="${pageParamName}" value="${currentPage - 1}" />
+                </c:url>
+                <a class="page-link" href="${prevUrl}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <!-- PAGE NUMBER BUTTONS -->
+            <c:forEach var="i" begin="1" end="${totalPages}">
+                <c:choose>
+                    <c:when test="${i == currentPage}">
+                        <li class="page-item active"><span class="page-link">${i}</span></li>
+                    </c:when>
+                    <c:when test="${i <= 3 || i > totalPages - 3 || (i >= currentPage - 1 && i <= currentPage + 1)}">
+                        <c:url var="pageUrl" value="${baseUrl}">
+                            <c:forEach var="param" items="${pageContext.request.parameterMap}">
+                                <c:if test="${param.key ne pageParamName}">
+                                    <c:param name="${param.key}" value="${param.value[0]}" />
+                                </c:if>
+                            </c:forEach>
+                            <c:param name="${pageParamName}" value="${i}" />
+                        </c:url>
+                        <li class="page-item"><a class="page-link" href="${pageUrl}">${i}</a></li>
+                    </c:when>
+                    <c:when test="${i == 4 && currentPage > 5}">
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    </c:when>
+                    <c:when test="${i == totalPages - 3 && currentPage < totalPages - 4}">
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    </c:when>
+                </c:choose>
+            </c:forEach>
+
+            <!-- NEXT BUTTON -->
+            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                <c:url var="nextUrl" value="${baseUrl}">
+                    <c:forEach var="param" items="${pageContext.request.parameterMap}">
+                        <c:if test="${param.key ne pageParamName}">
+                            <c:param name="${param.key}" value="${param.value[0]}" />
+                        </c:if>
+                    </c:forEach>
+                    <c:param name="${pageParamName}" value="${currentPage + 1}" />
+                </c:url>
+                <a class="page-link" href="${nextUrl}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="text-center text-muted small mt-2">
+        Showing ${(currentPage - 1) * pageSize + 1}
+        to ${currentPage * pageSize < totalCount ? currentPage * pageSize : totalCount}
+        of ${totalCount} items
+    </div>
+</c:if>
