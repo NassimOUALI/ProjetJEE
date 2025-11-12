@@ -64,7 +64,6 @@
                                                 <p class="mb-2 small">${fn:length(g.description) > 120 ? fn:substring(g.description, 0, 117).concat('...') : g.description}</p>
                                                 <div class="d-flex flex-wrap gap-2">
                                                     <a class="btn btn-sm btn-outline-dark" href="${pageContext.request.contextPath}/groups/view?id=${g.id}"><i class="bi bi-eye"></i> View</a>
-                                                    <a class="btn btn-sm btn-outline-primary" href="${pageContext.request.contextPath}/sessions/create?groupId=${g.id}"><i class="bi bi-plus-circle"></i> New Session</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -90,7 +89,6 @@
                             <i class="bi bi-calendar2-week"></i>
                             <h5 class="mb-2">You're all caught up</h5>
                             <p class="mb-3">No upcoming sessions right now. Create one to keep the momentum going.</p>
-                            <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/sessions/create"><i class="bi bi-plus-circle"></i> Schedule a session</a>
                         </div>
                     </c:when>
                     <c:otherwise>
